@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ali Hacker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+  :root{
+    --orange:#ff7a00; /* saffron */
+    --green:#0cb86a; /* india green */
+    --blue:#1b57f2; /* modern accent */
+    --bg:#0b0f14;
+    --card:#121826;
+    --muted:#9aa4b2;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:#e9edf3;
+    background: radial-gradient(1000px 600px at 20% -10%, rgba(255,122,0,.18), transparent 60%),
+    radial-gradient(900px 600px at 120% 0%, rgba(12,184,106,.18), transparent 60%),
+    #0b0f14;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .wrap{ width:min(480px, 100%); }
+
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    backdrop-filter: blur(6px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:24px; padding:26px 22px; box-shadow:0 20px 60px rgba(0,0,0,.45);
+    animation: pop .6s ease;
+  }
+  @keyframes pop{ from{transform:translateY(10px); opacity:0} to{transform:none; opacity:1} }
+
+  .flag{width:64px; height:auto; display:block; margin:0 auto 8px; filter:drop-shadow(0 4px 10px rgba(0,0,0,.25));}
+  .title{ text-align:center; font-weight:800; letter-spacing:.2px; margin:2px 0 8px; font-size:28px; }
+  .subtitle{ text-align:center; color:var(--muted); font-size:14px; margin-bottom:18px }
+
+  .badges{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:0 0 14px}
+  .badge{font-size:11px; color:#d8dee9; background:#1a2336; border:1px solid rgba(255,255,255,.08); padding:6px 10px; border-radius:999px}
+
+  label.block{display:block; font-weight:600; margin-top:14px; margin-bottom:8px}
+  .games{
+    display:flex;
+    gap:10px;
+  }
+  .game-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .game{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    background:#121a2b;
+    border:1px solid rgba(255,255,255,.08);
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .game:hover{ transform:translateY(-1px); border-color:rgba(255,255,255,.16); box-shadow:0 8px 20px rgba(0,0,0,.25)}
+  .game input{ accent-color:var(--green) }
+  .game .icon{font-size:18px}
+
+  .input{
+    width:100%; background:#121a2b; color:#e9edf3; border:1px solid rgba(255,255,255,.1); border-radius:12px;
+    padding:12px 14px; outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .input:focus{ border-color:var(--blue); box-shadow:0 0 0 4px rgba(27,87,242,.18) }
+  .hint{font-size:12px; color:var(--muted); margin-top:6px}
+  .warn{ display:none; color:#ff6767; font-size:13px; margin-top:8px; animation: flash .5s ease }
+  @keyframes flash{ from{opacity:0; transform:translateY(-2px)} to{opacity:1; transform:none} }
+
+  .btn{
+    margin-top:16px; width:100%; border:0; border-radius:14px; padding:14px 16px; font-weight:800; font-size:16px;
+    color:#071018; background:linear-gradient(90deg, var(--orange), var(--green)); cursor:pointer;
+    box-shadow:0 10px 30px rgba(255,122,0,.25), 0 10px 30px rgba(12,184,106,.18);
+    transition: transform .12s ease, filter .2s ease, opacity .2s ease;
+  }
+  .btn:disabled{opacity:.5; cursor:not-allowed; filter:grayscale(.3)}
+  .btn:not(:disabled):active{ transform:scale(.98) }
+
+  .progress{ display:none; height:10px; background:#101625; border-radius:999px; overflow:hidden; margin-top:14px; border:1px solid rgba(255,255,255,.08) }
+  .bar{ height:100%; width:0; background:linear-gradient(90deg, var(--orange), var(--green)); animation: fill 2.4s linear forwards }
+  @keyframes fill{ from{width:0} to{width:100%} }
+
+  .message-box{
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #1a2336;
+    border: 1px solid rgba(255,255,255,.08);
+    font-size: 14px;
+    line-height: 1.4;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--muted);
+  }
+  .message-box .spinner{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff;
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 1s ease-in-out infinite;
+    margin-left: 10px; /* Spacing for RTL */
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Modal styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .modal-overlay.visible {
+    visibility: visible;
+    opacity: 1;
+  }
+  .modal-content {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 24px;
+    padding: 26px 22px;
+    width: min(400px, 90%);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    animation: pop 0.6s ease;
+  }
+  .modal-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+  .modal-text {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .modal-close-btn {
+    background: linear-gradient(90deg, var(--orange), var(--green));
+    border: 0;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-weight: 800;
+    font-size: 16px;
+    color: #071018;
+    cursor: pointer;
+    transition: transform .12s ease;
+  }
+  .modal-close-btn:active {
+    transform: scale(0.98);
+  }
+
+  .cta{
+    margin-top:18px; display:block; text-align:center; text-decoration:none; font-weight:700; color:#fff;
+    background: linear-gradient(90deg, #1b57f2, #06b6d4);
+    padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 12px 30px rgba(27,87,242,.25);
+  }
+
+  .meta{display:flex; justify-content:space-between; align-items:center; margin-top:14px; color:var(--muted); font-size:13px}
+
+  .footer{ text-align:center; color:#a6b0be; font-size:12px; margin-top:14px }
+  .footer strong{color:#fff}
+
+  /* Responsive */
+  @media (max-width:420px){
+    .title{font-size:24px}
+    .games{
+        flex-direction: column;
+    }
+  }
+  </style>
+</head>
+<body>
+  <div class="wrap" dir="rtl">
+    <div class="card">
+      <img src="https://flagcdn.com/w320/dz.png" class="flag" alt="Algeria Flag"/>
+      <div class="title">Ali Hacker</div>
+      <div class="subtitle">إشارات سريعة • صنع للجزائر • DZD</div>
+
+      <div class="badges">
+        <div class="badge">🔒 آمن</div>
+        <div class="badge">✅ تم التحقق</div>
+        <div class="badge">✨ مدعوم بالذكاء الاصطناعي</div>
+      </div>
+
+      <label class="block">اختر لعبتك</label>
+      <div class="games">
+        <div class="game-column">
+          <label class="game"><input type="radio" name="game" value="Crash" checked> <span class="icon">💥</span> Crash</label>
+          <label class="game"><input type="radio" name="game" value="Aviator"> <span class="icon">✈️</span> Aviator</label>
+          <label class="game"><input type="radio" name="game" value="Penalty"> <span class="icon">⚽️</span> Penalty</label>
+        </div>
+        <div class="game-column">
+          <label class="game"><input type="radio" name="game" value="Mines"> <span class="icon">💎</span> Mines</label>
+          <label class="game"><input type="radio" name="game" value="Chicken Road"> <span class="icon">🐔</span> Chicken Road</label>
+        </div>
+      </div>
+
+      <label class="block" for="acc">معرف حساب 1xBet</label>
+      <input id="acc" class="input" placeholder="مثال: 9876543210" maxlength="10" inputmode="numeric" />
+      <div class="hint">أدخل 10 أرقام • العملة: DZD</div>
+      <div class="warn" id="warn">الرجاء إدخال معرف صالح مكون من 10 أرقام.</div>
+
+      <button class="btn" id="start" disabled>ابدأ</button>
+      <div class="progress" id="progress"><div class="bar"></div></div>
+      <div class="message-box" id="messageBox" style="display: none;"></div>
+
+      <a class="cta" id="depositLink" href="https://reffpa.com/L?tag=d_4870082m_18609c_&site=4870082&ad=18609&r=registration" target="_blank">💳 قم بالإيداع</a>
+
+      <div class="meta">
+        <div>🔵 متصل: <span id="online">143</span></div>
+        <div>⏳ ينتهي الوصول خلال <span id="countdown">05:00</span></div>
+      </div>
+
+      <div class="footer">صنع بواسطة <strong>HackerHouse</strong> • بنغالور</div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-title">خطأ في التفعيل</div>
+      <div class="modal-text">❌ لم يتم العثور على إيداع بقيمة 2000 دينار جزائري. يرجى القيام بإيداع والمحاولة مرة أخرى.</div>
+      <button class="modal-close-btn" id="modalCloseBtn">إغلاق</button>
+    </div>
+  </div>
+
+  <script>
+    // Countdown
+    let left = 300; const cd = document.getElementById('countdown');
+    setInterval(()=>{ if(left>0) left--; const m=Math.floor(left/60).toString().padStart(2,'0'); const s=(left%60).toString().padStart(2,'0'); cd.textContent=`${m}:${s}`; },1000);
+
+    // Online counter micro-variation
+    const onlineEl = document.getElementById('online');
+    setInterval(()=>{ const base = 140; const jitter = Math.floor(Math.random()*8)-4; onlineEl.textContent = base + jitter; }, 2500);
+
+    // ID validation
+    const acc = document.getElementById('acc');
+    const start = document.getElementById('start');
+    const warn = document.getElementById('warn');
+    acc.addEventListener('input', ()=>{
+      const ok = /^\d{10}$/.test(acc.value);
+      start.disabled = !ok; warn.style.display = ok? 'none':'block';
+    });
+
+    // --- MODAL AND PROGRESS LOGIC ---
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const progress = document.getElementById('progress');
+    const messageBox = document.getElementById('messageBox');
+
+    // Shows the modal
+    function showModal() {
+      modalOverlay.classList.add('visible');
+    }
+
+    // Hides the modal
+    function hideModal() {
+      modalOverlay.classList.remove('visible');
+    }
+
+    // Start button event listener
+    start.addEventListener('click', ()=>{
+      // Disable button and show progress elements
+      start.disabled = true;
+      progress.style.display='block';
+      messageBox.style.display = 'flex';
+      messageBox.innerHTML = `جاري الاتصال بخوادم 1xBet... <div class="spinner"></div>`;
+      
+      // Restart the progress bar animation
+      const bar = progress.querySelector('.bar');
+      bar.style.animation='none'; bar.offsetHeight; bar.style.animation='fill 2.4s linear forwards';
+      
+      // After progress bar finishes, update the message
+      setTimeout(()=>{
+        messageBox.innerHTML = `جاري التحقق من إيداع 2000 دينار جزائري... <div class="spinner"></div>`;
+      }, 2400);
+
+      // After another delay, show the modal and reset the UI
+      setTimeout(()=>{
+        showModal();
+        progress.style.display = 'none';
+        messageBox.style.display = 'none';
+        start.disabled = false;
+      }, 4400); // 2400ms for progress + 2000ms delay
+    });
+
+    // Close the modal when the button is clicked
+    modalCloseBtn.addEventListener('click', hideModal);
+
+    // You can replace the deposit link easily here
+    // document.getElementById('depositLink').href = 'YOUR_OFFER_LINK_HERE';
+  </script>
+</body>
+</html>
